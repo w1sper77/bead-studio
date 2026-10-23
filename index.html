@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+  <meta name="theme-color" content="#FBF6EC">
+  <title>豆豆工坊 · 拼豆图纸与按号填豆</title>
+  <meta name="description" content="上传一张照片，把它变成拼豆图纸。按色号填豆、自动保存、熨烫成品，并生成可直接采购的材料清单。">
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-frame">
+    <main id="app">
+
+      <!-- 首页 -->
+      <section class="screen" id="screen-home">
+        <header class="home-top">
+          <div class="brand">
+            <span class="brand-mark" aria-hidden="true">
+              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+            </span>
+            <span class="brand-text">豆豆工坊<small>BEAD STUDIO</small></span>
+          </div>
+          <button class="icon-btn ghost" id="btn-home-menu" aria-label="更多">
+            <svg viewBox="0 0 24 24" width="20" height="20"><circle cx="5" cy="12" r="1.8" fill="currentColor"/><circle cx="12" cy="12" r="1.8" fill="currentColor"/><circle cx="19" cy="12" r="1.8" fill="currentColor"/></svg>
+          </button>
+        </header>
+
+        <div class="home-scroll">
+          <section class="hero">
+            <div class="hero-art-wrap">
+              <canvas id="hero-art" width="420" height="420" aria-hidden="true"></canvas>
+            </div>
+            <p class="eyebrow">照片 → 图纸 → 一颗颗拼起来</p>
+            <h1>把喜欢的图，<br>拼成一颗颗豆子。</h1>
+            <p class="lede">上传照片，自动生成带色号的拼豆图纸。跟着填、随时停，做完还有一份能直接采购的材料清单。</p>
+            <button class="btn btn-primary btn-hero" id="btn-start" data-guide="start">
+              <span>开始制作</span>
+              <svg viewBox="0 0 24 24" width="20" height="20"><path d="M5 12h13M12 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <p class="hero-meta">本机处理 · 无需登录 · 进度自动保存</p>
+          </section>
+
+          <section class="home-continue" id="home-continue"></section>
+
+          <section class="samples">
+            <div class="section-head">
+              <h2>没有照片？试试这些</h2>
+              <span class="section-sub">约 24 色</span>
+            </div>
+            <div class="sample-strip" id="home-samples"></div>
+          </section>
+
+          <section class="home-links">
+            <button class="link-card" id="btn-library">
+              <span class="link-ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="22" height="22"><rect x="3" y="4" width="7" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="4" width="7" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M14 18h7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+              </span>
+              <span class="link-copy"><b>作品库</b><small id="library-count">把做了一半的作品接上</small></span>
+              <span class="link-arrow">→</span>
+            </button>
+            <button class="link-card" id="btn-howto">
+              <span class="link-ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M9.6 9.2a2.5 2.5 0 1 1 3.6 2.3c-.8.4-1.2.9-1.2 1.7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="17" r="1" fill="currentColor"/></svg>
+              </span>
+              <span class="link-copy"><b>怎么玩</b><small>30 秒看懂按号填豆</small></span>
+              <span class="link-arrow">→</span>
+            </button>
+          </section>
+
+          <p class="home-foot">作品只保存在这台设备 · 建议及时导出<br>豆豆工坊 v1.0</p>
+        </div>
+      </section>
+
+      <!-- 上传 -->
+      <section class="screen" id="screen-upload">
+        <header class="topbar">
+          <button class="icon-btn" data-back aria-label="返回">
+            <svg viewBox="0 0 24 24" width="22" height="22"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <h2>选择图片</h2>
+          <span class="topbar-spacer"></span>
+        </header>
+        <div class="screen-body upload-body">
+          <label class="upload-drop" for="file-input" data-guide="upload">
+            <span class="upload-ico" aria-hidden="true">
+              <svg viewBox="0 0 48 48" width="44" height="44"><rect x="6" y="10" width="36" height="28" rx="7" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="18" cy="20" r="3.4" fill="currentColor"/><path d="M9 34l9-9 7 6 6-5 8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <b>从相册选择</b>
+            <span>JPG / PNG / HEIC / WebP · 不超过 10MB</span>
+          </label>
+          <input type="file" id="file-input" accept="image/*" hidden>
+
+          <div class="section-head tight">
+            <h2>或从一张示例开始</h2>
+            <span class="section-sub">新手推荐</span>
+          </div>
+          <div class="sample-grid" id="upload-samples"></div>
+
+          <p class="fineprint">
+            <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M12 3l7 3v6c0 4.6-3 7.6-7 9-4-1.4-7-4.4-7-9V6z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            图片只在这台设备上处理，不会上传到服务器。
+          </p>
+        </div>
+      </section>
+
+      <!-- 裁剪 -->
+      <section class="screen" id="screen-crop">
+        <header class="topbar">
+          <button class="icon-btn" data-back aria-label="返回">
+            <svg viewBox="0 0 24 24" width="22" height="22"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <h2>调整构图</h2>
+          <button class="text-btn" id="btn-crop-next-top">下一步</button>
+        </header>
+        <div class="crop-stage" id="crop-stage">
+          <canvas id="crop-canvas"></canvas>
+          <div class="crop-tip" id="crop-tip">拖动图片调整位置 · 双指缩放</div>
+        </div>
+        <div class="crop-controls">
+          <div class="ratio-row" id="ratio-row">
+            <button class="ratio-pill active" data-ratio="1">1:1<span>单板</span></button>
+            <button class="ratio-pill" data-ratio="0.5">1:2<span>双板竖</span></button>
+            <button class="ratio-pill" data-ratio="2">2:1<span>双板横</span></button>
+          </div>
+          <div class="crop-tools">
+            <button class="crop-tool" id="btn-rotate" aria-label="旋转 90 度">
+              <svg viewBox="0 0 24 24" width="21" height="21"><path d="M4 9a8 8 0 1 1 1 8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><path d="M4 4v5h5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span>旋转</span>
+            </button>
+            <button class="crop-tool" id="btn-mirror" aria-label="水平镜像">
+              <svg viewBox="0 0 24 24" width="21" height="21"><path d="M12 3v18" stroke="currentColor" stroke-width="1.7" stroke-dasharray="2 3" stroke-linecap="round"/><path d="M9 6L3 12l6 6zM15 6l6 6-6 6z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+              <span>镜像</span>
+            </button>
+            <div class="zoom-control">
+              <button id="crop-zoom-out" aria-label="缩小">−</button>
+              <input type="range" id="crop-zoom" min="1" max="3" step="0.01" value="1" aria-label="缩放">
+              <button id="crop-zoom-in" aria-label="放大">＋</button>
+            </div>
+          </div>
+        </div>
+        <div class="bottom-bar">
+          <button class="btn btn-primary" id="btn-crop-next">下一步 · 选板型</button>
+        </div>
+      </section>
+
+      <!-- 参数 -->
+      <section class="screen" id="screen-params">
+        <header class="topbar">
+          <button class="icon-btn" data-back aria-label="返回">
+            <svg viewBox="0 0 24 24" width="22" height="22"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <h2>生成图纸</h2>
+          <span class="topbar-spacer"></span>
+        </header>
+        <div class="screen-body params-body">
+          <div class="crop-summary">
+            <div class="crop-summary-img"><canvas id="param-thumb" width="240" height="240"></canvas></div>
+            <div class="crop-summary-copy">
+              <b>构图已就绪</b>
+              <span id="param-crop-meta">正方形 · 自动居中裁切</span>
+              <button class="link-inline" id="btn-recrop">重新裁剪</button>
+            </div>
+          </div>
+
+          <div class="section-head tight"><h2>选一块钉板</h2><span class="section-sub">越大越还原</span></div>
+          <div class="board-grid" id="board-grid">
+            <button class="board-card active" data-board="single" data-guide="board">
+              <span class="board-shape single"></span>
+              <b>单板</b>
+              <span>29 × 29</span>
+              <em>841 颗 · 约 12 分钟</em>
+            </button>
+            <button class="board-card" data-board="double-v">
+              <span class="board-shape double-v"></span>
+              <b>双板竖</b>
+              <span>29 × 58</span>
+              <em>1,682 颗 · 约 23 分钟</em>
+            </button>
+            <button class="board-card" data-board="double-h">
+              <span class="board-shape double-h"></span>
+              <b>双板横</b>
+              <span>58 × 29</span>
+              <em>1,682 颗 · 约 23 分钟</em>
+            </button>
+            <button class="board-card" data-board="quad">
+              <span class="board-shape quad"></span>
+              <b>四板 <i class="tag">P1</i></b>
+              <span>58 × 58</span>
+              <em>3,364 颗 · 约 47 分钟</em>
+            </button>
+          </div>
+
+          <div class="section-head tight"><h2>选一套色板</h2><span class="section-sub">色号越全越还原</span></div>
+          <div class="palette-options" id="palette-options">
+            <button class="palette-card active" data-palette="std50">
+              <span class="palette-dots" id="palette-dots-50"></span>
+              <span class="palette-card-copy"><b>50 色标准板</b><small>还原照片细节 · 选色稍多</small></span>
+              <span class="radio-mark"></span>
+            </button>
+            <button class="palette-card" data-palette="std30">
+              <span class="palette-dots" id="palette-dots-30"></span>
+              <span class="palette-card-copy"><b>30 色精简板</b><small>更好买豆 · 适合简单图案</small></span>
+              <span class="radio-mark"></span>
+            </button>
+          </div>
+
+          <label class="switch-row" for="dither-toggle">
+            <span class="switch-copy"><b>抖动过渡</b><small>用点的疏密模拟渐变，照片更细腻</small></span>
+            <input type="checkbox" id="dither-toggle" class="switch-input">
+            <span class="switch-ui" aria-hidden="true"><i></i></span>
+          </label>
+
+          <p class="tiny-note" id="param-estimate">单板 · 50 色 · 预计 841 颗豆子</p>
+        </div>
+        <div class="bottom-bar">
+          <button class="btn btn-primary" id="btn-generate" data-guide="generate">生成图纸</button>
+        </div>
+      </section>
+
+      <!-- 预览 -->
+      <section class="screen" id="screen-preview">
+        <header class="topbar">
+          <button class="icon-btn" data-back aria-label="返回">
+            <svg viewBox="0 0 24 24" width="22" height="22"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <h2>图纸预览</h2>
+          <span class="topbar-spacer"></span>
+        </header>
+        <div class="screen-body preview-body">
+          <div class="preview-canvas-wrap">
+            <canvas id="preview-canvas"></canvas>
+            <span class="preview-badge" id="preview-badge">29 × 29</span>
+          </div>
+          <div class="preview-stats">
+            <div><b id="prev-total">841</b><span>总豆数</span></div>
+            <div><b id="prev-colors">24</b><span>使用色号</span></div>
+            <div><b id="prev-time">12</b><span>预计分钟</span></div>
+          </div>
+          <p class="preview-hint" id="preview-hint"></p>
+          <div class="section-head tight"><h2>用得最多的颜色</h2><span class="section-sub" id="prev-topnote"></span></div>
+          <div class="top-colors" id="top-colors"></div>
+          <p class="fineprint">制作时每一格都会印上目标色号。放错的豆子会弹回来，不会白做。</p>
+        </div>
+        <div class="bottom-bar split">
+          <button class="btn btn-ghost" id="btn-readjust">重新调整</button>
+          <button class="btn btn-primary" id="btn-start-making" data-guide="start-making">开始制作</button>
+        </div>
+      </section>
+
+      <!-- 制作 -->
+      <section class="screen maker-screen" id="screen-maker">
+        <div class="maker">
+          <header class="maker-top">
+            <button class="icon-btn" id="btn-maker-back" aria-label="返回">
+              <svg viewBox="0 0 24 24" width="22" height="22"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="maker-title">
+              <b id="maker-name">橘猫</b>
+              <span id="maker-sub">已填 0 / 841</span>
+            </div>
+            <button class="icon-btn" id="btn-maker-menu" aria-label="作品选项">
+              <svg viewBox="0 0 24 24" width="20" height="20"><circle cx="5" cy="12" r="1.7" fill="currentColor"/><circle cx="12" cy="12" r="1.7" fill="currentColor"/><circle cx="19" cy="12" r="1.7" fill="currentColor"/></svg>
+            </button>
+          </header>
+          <div class="maker-progress"><i id="maker-bar"></i><span id="maker-percent">0%</span></div>
+
+          <div class="board-stage" id="board-stage">
+            <canvas id="board-canvas"></canvas>
+            <div class="zoom-pill" id="zoom-pill">100%</div>
+            <div class="maker-tools">
+              <button class="tool-btn" id="btn-find" data-guide="find" aria-label="找豆">
+                <svg viewBox="0 0 24 24" width="20" height="20"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><circle cx="10.5" cy="10.5" r="2" fill="currentColor"/></svg>
+                <span>找豆</span>
+              </button>
+              <button class="tool-btn active" id="btn-numbers" aria-label="色号显示">
+                <span class="tool-glyph">12</span>
+                <span>色号</span>
+              </button>
+              <button class="tool-btn" id="btn-pan" aria-label="移动画板">
+                <svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 3v8M12 21v-6M3 12h8M21 12h-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M9 6l3-3 3 3M9 18l3 3 3-3M6 9l-3 3 3 3M18 9l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span>移动</span>
+              </button>
+              <button class="tool-btn" id="btn-fit" aria-label="适应屏幕">
+                <svg viewBox="0 0 24 24" width="20" height="20"><path d="M9 4H4v5M15 4h5v5M9 20H4v-5M15 20h5v-5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span>适应</span>
+              </button>
+            </div>
+            <div class="board-toast" id="board-toast"></div>
+          </div>
+
+          <div class="palette-sheet">
+            <div class="palette-head">
+              <div class="sel-info">
+                <span class="sel-swatch" id="sel-swatch"></span>
+                <span class="sel-copy"><b id="sel-name">—</b><small id="sel-left">—</small></span>
+              </div>
+              <button class="mini-btn" id="btn-find-2">找豆</button>
+            </div>
+            <div class="chips" id="chips" data-guide="palette"></div>
+            <button class="completed-toggle" id="btn-completed" hidden></button>
+          </div>
+
+          <div class="maker-bottom">
+            <div class="maker-hint" id="maker-hint">点选色号，再点按或滑过格子</div>
+            <button class="btn btn-primary btn-iron" id="btn-iron" hidden>开始熨烫 →</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 熨烫 -->
+      <section class="screen iron-screen" id="screen-iron">
+        <canvas id="iron-canvas"></canvas>
+        <div class="iron-copy">
+          <span class="iron-eyebrow">最后一步</span>
+          <h2>正在熨烫…</h2>
+          <p id="iron-sub">豆子正在融合成一块完整的作品</p>
+        </div>
+        <button class="btn btn-soft" id="btn-skip-iron">跳过动画</button>
+      </section>
+
+      <!-- 成品 -->
+      <section class="screen" id="screen-finish">
+        <header class="topbar">
+          <button class="icon-btn" data-back id="btn-finish-back" aria-label="返回">
+            <svg viewBox="0 0 24 24" width="22" height="22"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <h2>完成啦</h2>
+          <button class="icon-btn" id="btn-finish-share" aria-label="分享">
+            <svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 15V4M8 7l4-3 4 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 12v7h14v-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </button>
+        </header>
+        <div class="screen-body finish-body">
+          <div class="finish-head">
+            <h1 id="finish-name">橘猫</h1>
+            <p id="finish-date">2026.10.20 完成 · 单板 29 × 29</p>
+          </div>
+          <div class="finish-art-wrap" id="finish-art-wrap">
+            <canvas id="finish-art"></canvas>
+            <span class="finish-stamp">已熨烫</span>
+          </div>
+          <div class="seg-row" id="edge-toggle">
+            <button class="seg active" data-edge="1">带板边</button>
+            <button class="seg" data-edge="0">不带板边</button>
+          </div>
+
+          <div class="compare-card">
+            <div class="compare" id="compare">
+              <div class="compare-base"><img id="compare-orig" alt="原图"></div>
+              <div class="compare-top"><canvas id="compare-art"></canvas></div>
+              <div class="compare-handle"><i></i></div>
+              <span class="compare-label left">成品</span>
+              <span class="compare-label right">原图</span>
+            </div>
+            <input type="range" id="compare-range" min="0" max="100" value="50" aria-label="对比原图">
+          </div>
+
+          <div class="finish-stats">
+            <div><b id="stat-beads">841</b><span>颗豆子</span></div>
+            <div><b id="stat-colors">24</b><span>种颜色</span></div>
+            <div><b id="stat-time">38 分</b><span>总用时</span></div>
+          </div>
+          <p class="finish-note" id="finish-note"></p>
+
+          <section class="materials" id="materials">
+            <button class="materials-head" id="btn-materials" aria-expanded="false">
+              <span class="mat-ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="22" height="22"><path d="M5 8h14l-1.2 12H6.2z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 8V6a3 3 0 0 1 6 0v2" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+              </span>
+              <span class="mat-copy"><b>材料清单</b><small id="mat-sub">24 色 · 841 颗 · 建议采购 948 颗</small></span>
+              <span class="mat-chevron">⌄</span>
+            </button>
+            <div class="materials-body" id="materials-body">
+              <div class="mat-table-head"><span>色号</span><span>颗数</span><span>建议采购</span></div>
+              <div id="mat-rows"></div>
+              <div class="mat-total" id="mat-total"></div>
+              <p class="mat-note">建议采购数按颗数 × 1.1 向上取整，给损耗留一点余量。<br><span id="mat-palette-note">色板版本：v1 标准 50 色</span></p>
+              <div class="mat-actions">
+                <button class="btn btn-soft sm" id="btn-export-long">导出清单长图</button>
+                <button class="btn btn-soft sm" id="btn-export-csv">导出 CSV</button>
+                <button class="btn btn-soft sm" id="btn-copy-list">复制清单</button>
+              </div>
+            </div>
+          </section>
+
+          <div class="finish-actions">
+            <button class="btn btn-primary" id="btn-export-art">导出成品长图</button>
+            <button class="btn btn-ghost" id="btn-again">再做一件</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 作品库 -->
+      <section class="screen" id="screen-library">
+        <header class="topbar">
+          <button class="icon-btn" data-back aria-label="返回">
+            <svg viewBox="0 0 24 24" width="22" height="22"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <h2>作品库</h2>
+          <button class="text-btn" id="btn-new-work">+ 新作品</button>
+        </header>
+        <div class="library-tabs" id="library-tabs">
+          <button class="tab active" data-tab="doing">进行中 <i id="tab-count-doing">0</i></button>
+          <button class="tab" data-tab="done">已完成 <i id="tab-count-done">0</i></button>
+        </div>
+        <div class="screen-body library-body" id="library-list"></div>
+      </section>
+
+    </main>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <div id="modal-root"></div>
+    <div id="guide-root"></div>
+  </div>
+
+  <script src="js/samples.js"></script>
+  <script src="js/palette.js"></script>
+  <script src="js/converter.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/board.js"></script>
+  <script src="js/guide.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
